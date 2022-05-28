@@ -3,6 +3,10 @@ name = "pdb_parser"
 version = "0.1.0"
 edition = "2021"
 
+[profile.release]
+lto = "fat"
+strip = true
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
 name = "pdb_parser"
@@ -10,3 +14,5 @@ crate-type = ["cdylib"]
 
 [dependencies]
 pyo3 = { version = "0.16.3", features = ["extension-module"] }
+serde = { version = "1.0.137", features = ["derive"] }
+serde_json = "1.0.81"

@@ -4,9 +4,11 @@ use std::io::{BufRead, BufReader};
 use std::path::Path;
 
 use pyo3::prelude::*;
+use serde::Serialize;
+use serde_json;
 
 #[pyclass]
-#[derive(Clone)]
+#[derive(Clone, Serialize)]
 struct Atom {
     #[pyo3(set, get)]
     name: String,
@@ -35,14 +37,14 @@ impl Atom {
 
     fn __repr__(&self) -> String {
         return format!(
-            "Atom: {}, [{}, {}, {}]",
+            "Atom: \"{}\", {{{}, {}, {}}}",
             self.name, self.pos_x, self.pos_y, self.pos_z
         );
     }
 }
 
 #[pyclass]
-#[derive(Clone)]
+#[derive(Clone, Serialize)]
 struct Residue {
     #[pyo3(set, get)]
     name: String,
@@ -66,7 +68,7 @@ impl Residue {
     }
 
     fn __repr__(&self) -> String {
-        let mut buffer = format!("Residue: {}\n", self.name);
+        let mut buffer = format!("Residue: \"{}\"\n", self.name);
 
         for atom in self.atoms.iter() {
             write!(buffer, "\t{}\n", atom.__repr__()).unwrap();
@@ -77,7 +79,7 @@ impl Residue {
 }
 
 #[pyclass]
-#[derive(Clone)]
+#[derive(Clone, Serialize)]
 struct Chain {
     #[pyo3(set, get)]
     name: String,
@@ -94,7 +96,7 @@ impl Chain {
     }
 
     fn __repr__(&self) -> String {
-        let mut buffer = format!("Chain: {}\n", self.name);
+        let mut buffer = format!("Chain: \"{}\"\n", self.name);
 
         for residue in self.residues.iter() {
             write!(buffer, "\t{}\n", residue.name).unwrap();
@@ -117,7 +119,7 @@ impl Chain {
 }
 
 #[pyclass]
-#[derive(Clone)]
+#[derive(Clone, Serialize)]
 struct Structure {
     #[pyo3(set, get)]
     name: String,
@@ -215,12 +217,18 @@ impl Structure {
         }
 
         return format!(
-            "Structure: {}\n\tChains number: {}\n\tResidues number: {}\n\tAtoms number: {}",
+            "Structure: \"{}\"\n\tChains number: {}\n\tResidues number: {}\n\tAtoms number: {}",
             self.name,
             self.chains.len(),
             residues_number,
             atoms_number
         );
+    }
+
+    fn dump_to_json(&self) -> PyResult<String> {
+        let serialized_structure = serde_json::to_string(self).unwrap();
+
+        return Ok(serialized_structure);
     }
 }
 

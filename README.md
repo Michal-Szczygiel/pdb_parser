@@ -18,5 +18,5 @@ uruchomionym wirtualnym środowisku Pythona. Można dodać flagę **--release** 
 pierwszego łańcucha.
 
 # O samym projekcie:
-Rozszerzenie zawiera prosty parser plików .pdb. Plik **pdb_parser.pyi** zawiera sygnatury klas i funkcji wchodzących w skład rozszerzenia. Plik **test/test.py** zawiera
+Projekt korzysta z rustowej biblioteki [PyO3](https://pyo3.rs/v0.16.4/). Rozszerzenie zawiera prosty parser plików .pdb. Plik **pdb_parser.pyi** zawiera sygnatury klas i funkcji wchodzących w skład rozszerzenia. Plik **test/test.py** zawiera
 przykład użycia tego rozszerzenia.
